@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.List;
 
 import com.tallkids.journal.populator.data.JournalEntry;
-import com.tallkids.journal.populator.util.AccessSQLUtil;
+import com.tallkids.journal.populator.util.AccessCSVUtil;
 import com.tallkids.journal.populator.util.XMLParserUtil;
 
 /**
@@ -25,22 +25,24 @@ public class PopulatorApp {
 		List<JournalEntry> entryList = XMLParserUtil.readInXML("recordsIn.xml");
 		
 		//Create new file
-		File outputFile = AccessSQLUtil.createOutputFile("recordsOut.sql");
+		File outputFile = AccessCSVUtil.createOutputFile("recordsOut.csv");
 		
 		if(!outputFile.equals(null))
 		{
 			int recordsIn = entryList.size();
 			int count = 0;
 			
+			AccessCSVUtil.writeInsertToFile(AccessCSVUtil.createFirstRow(), outputFile);
+			
 			//Loop through the records
 			for(JournalEntry je: entryList)
 			{
 				
 				//Create the string record
-				String strRecord = AccessSQLUtil.createRecordInsert(je, "Journal");
+				String strRecord = AccessCSVUtil.createRecordInsert(je, "Journal");
 				
 				//Write the record to the file
-				if(AccessSQLUtil.writeInsertToFile(strRecord, outputFile))
+				if(AccessCSVUtil.writeInsertToFile(strRecord, outputFile))
 				{
 					count += 1;
 				}
